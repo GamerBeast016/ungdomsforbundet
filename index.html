@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Souf — Bli medlem</title>
+<style>
+  :root{
+    --ink:#10233A; --sea:#1D4E5F; --foam:#DDEFE9; --sun:#FFC93C; --white:#FBFDFC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; min-height:100dvh; background:var(--ink); color:var(--white);
+    font-family:Georgia,'Times New Roman',serif;
+    display:grid; grid-template-columns:1fr 1fr;
+  }
+  .brand{
+    background:var(--sea); padding:56px 48px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .brand h1{
+    font-size:clamp(72px,12vw,160px); margin:0; line-height:.9;
+    letter-spacing:-0.04em; font-weight:400; color:var(--foam);
+  }
+  .brand p{
+    font-family:'Helvetica Neue',Arial,sans-serif; font-size:16px;
+    color:var(--foam); opacity:.8; max-width:28ch; margin:0;
+  }
+  .sun{
+    width:56px; height:56px; border-radius:50%; background:var(--sun);
+  }
+  .form-side{
+    padding:56px 48px; display:flex; align-items:center;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+  .wrap{ width:100%; max-width:380px; }
+  h2{ font-family:Georgia,serif; font-weight:400; font-size:32px; margin:0 0 28px; }
+  label{ display:block; font-size:14px; margin-bottom:6px; color:var(--foam); }
+  input{
+    width:100%; padding:13px 0; margin-bottom:22px; background:transparent;
+    border:none; border-bottom:1px solid var(--sea); color:var(--white);
+    font-size:16px; outline:none;
+  }
+  input:focus{ border-bottom-color:var(--sun); }
+  button{
+    background:var(--sun); color:var(--ink); border:none; padding:14px 32px;
+    font-size:16px; font-weight:700; border-radius:999px; cursor:pointer;
+  }
+  button:focus-visible{ outline:3px solid var(--foam); outline-offset:3px; }
+  .small{ font-size:12px; color:var(--foam); opacity:.7; margin-top:18px; }
+  #ok{ display:none; }
+  /* Stora skärmar: håll innehållet centrerat och läsbart */
+  @media (min-width:1500px){
+    .brand{ padding:80px 8vw; }
+    .form-side{ padding:80px 8vw; }
+    .wrap{ max-width:440px; }
+  }
+  /* Surfplatta och mindre laptop */
+  @media (max-width:1000px){
+    .brand, .form-side{ padding:48px 32px; }
+  }
+  /* Telefon: sidorna läggs under varandra */
+  @media (max-width:760px){
+    body{ grid-template-columns:1fr; grid-template-rows:auto 1fr; }
+    .brand{
+      padding:28px 24px 32px; gap:24px;
+      flex-direction:row; align-items:flex-end; justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .brand > div:last-child{ order:1; flex:1 1 100%; }
+    .brand h1{ font-size:clamp(64px,22vw,110px); }
+    .brand p{ max-width:none; font-size:15px; margin-top:8px; }
+    .sun{ width:36px; height:36px; }
+    .form-side{ padding:32px 24px 48px; align-items:flex-start; }
+    .wrap{ max-width:none; }
+    h2{ font-size:28px; margin-bottom:20px; }
+    input{ padding:14px 0; }
+    button{ width:100%; padding:16px; }
+  }
+  /* Låg skärmhöjd, t.ex. mobil på sidan */
+  @media (max-height:500px) and (min-width:761px){
+    .brand h1{ font-size:64px; }
+    .brand, .form-side{ padding:24px 32px; }
+  }
+</style>
+</head>
+<body>
+  <section class="brand">
+    <div class="sun" aria-hidden="true"></div>
+    <div>
+      <h1>Souf</h1>
+      <p>Syrisk Ortodoxa Ungdomsförbundet</p>
+    </div>
+  </section>
+  <section class="form-side">
+    <div class="wrap">
+      <div id="form-view">
+        <h2>Bli medlem</h2>
+        <form id="signup">
+          <label for="name">Namn</label>
+          <input id="name" name="name" autocomplete="name" required>
+          <label for="email">Mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <label for="phone">Telefonnummer</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+          <button type="submit">Bli medlem</button>
+        </form>
+      </div>
+      <div id="ok">
+        <h2>Välkommen till Souf!</h2>
+        <p>Din anmälan är mottagen.</p>
+      </div>
+    </div>
+  </section>
+<script>
+  // Klistra in din Web app-URL från Google Apps Script här:
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwC-c5BxZaqO03Usb3U4xVw4eNyCy8l6k89aMzwChoGjAnYqD-v3JVMElAzF_8r4ZTltg/exec';
+
+  document.getElementById('signup').addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = e.target.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'Skickar...';
+    var data = new URLSearchParams({
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value
+    });
+    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: data })
+      .then(function(){
+        document.getElementById('form-view').style.display='none';
+        document.getElementById('ok').style.display='block';
+      })
+      .catch(function(){
+        btn.disabled = false;
+        btn.textContent = 'Bli medlem';
+        alert('Något gick fel. Försök igen.');
+      });
+  });
+</script>
+</body>
+</html>
