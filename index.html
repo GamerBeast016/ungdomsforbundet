@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Souf — Bli medlem</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FFC93C'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='13' y='3' width='6' height='26' fill='%232B3A9E'/%3E%3Crect x='3' y='13' width='26' height='6' fill='%232B3A9E'/%3E%3C/svg%3E">
 <style>
   :root{
-    --ink:#10233A; --sea:#1D4E5F; --foam:#DDEFE9; --sun:#FFC93C; --white:#FBFDFC;
+    --ink:#10233A; --sea:#1D4E5F; --foam:#DDEFE9; --sun:#DDEFE9; --white:#FBFDFC;
   }
   *{box-sizing:border-box;}
   body{
@@ -27,9 +27,7 @@
     font-family:'Helvetica Neue',Arial,sans-serif; font-size:16px;
     color:var(--foam); opacity:.8; max-width:28ch; margin:0;
   }
-  .sun{
-    width:56px; height:56px; border-radius:50%; background:var(--sun);
-  }
+  .sun{ width:96px; height:96px; }
   .form-side{
     padding:56px 48px; display:flex; align-items:center;
     font-family:'Helvetica Neue',Arial,sans-serif;
@@ -71,7 +69,7 @@
     .brand > div:last-child{ order:1; flex:1 1 100%; }
     .brand h1{ font-size:clamp(64px,22vw,110px); }
     .brand p{ max-width:none; font-size:15px; margin-top:8px; }
-    .sun{ width:36px; height:36px; }
+    .sun{ width:60px; height:60px; }
     .form-side{ padding:32px 24px 48px; align-items:flex-start; }
     .wrap{ max-width:none; }
     h2{ font-size:28px; margin-bottom:20px; }
@@ -87,7 +85,28 @@
 </head>
 <body>
   <section class="brand">
-    <div class="sun" aria-hidden="true"></div>
+    <svg class="sun" viewBox="-100 -100 200 200" role="img" aria-label="Souf-korset">
+      <defs>
+        <g id="end">
+          <rect x="-9" y="-100" width="18" height="8"/>
+          <rect x="-18" y="-93" width="36" height="8"/>
+          <rect x="-27" y="-86" width="54" height="27"/>
+          <rect x="-20" y="-60" width="40" height="8"/>
+          <g fill="#1D4E5F">
+            <rect x="-2.5" y="-81" width="5" height="16"/>
+            <rect x="-8" y="-75.5" width="16" height="5"/>
+          </g>
+        </g>
+      </defs>
+      <g fill="#DDEFE9">
+        <rect x="-14" y="-60" width="28" height="120"/>
+        <rect x="-60" y="-14" width="120" height="28"/>
+        <use href="#end"/>
+        <use href="#end" transform="rotate(90)"/>
+        <use href="#end" transform="rotate(180)"/>
+        <use href="#end" transform="rotate(270)"/>
+      </g>
+    </svg>
     <div>
       <h1>Souf</h1>
       <p>Syrisk Ortodoxa Ungdomsförbundet</p>
