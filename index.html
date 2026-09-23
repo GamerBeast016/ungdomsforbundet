@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Souf — Bli medlem</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23FFC93C'/%3E%3C/svg%3E">
 <style>
   :root{
     --ink:#10233A; --sea:#1D4E5F; --foam:#DDEFE9; --sun:#FFC93C; --white:#FBFDFC;
@@ -96,7 +97,7 @@
     <div class="wrap">
       <div id="form-view">
         <h2>Bli medlem</h2>
-        <form id="signup">
+        <form id="signup" action="https://script.google.com/macros/s/AKfycbwC-c5BxZaqO03Usb3U4xVw4eNyCy8l6k89aMzwChoGjAnYqD-v3JVMElAzF_8r4ZTltg/exec" method="POST" target="hidden_iframe">
           <label for="name">Namn</label>
           <input id="name" name="name" autocomplete="name" required>
           <label for="email">Mail</label>
@@ -112,30 +113,31 @@
       </div>
     </div>
   </section>
+<iframe name="hidden_iframe" id="hidden_iframe" title="" style="display:none"></iframe>
 <script>
-  // Klistra in din Web app-URL från Google Apps Script här:
-  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwC-c5BxZaqO03Usb3U4xVw4eNyCy8l6k89aMzwChoGjAnYqD-v3JVMElAzF_8r4ZTltg/exec';
+  var form = document.getElementById('signup');
+  var btn = form.querySelector('button');
+  var sent = false;
 
-  document.getElementById('signup').addEventListener('submit', function(e){
-    e.preventDefault();
-    var btn = e.target.querySelector('button');
+  form.addEventListener('submit', function(){
+    sent = true;
     btn.disabled = true;
     btn.textContent = 'Skickar...';
-    var data = new URLSearchParams({
-      name: document.getElementById('name').value,
-      email: document.getElementById('email').value,
-      phone: document.getElementById('phone').value
-    });
-    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: data })
-      .then(function(){
-        document.getElementById('form-view').style.display='none';
-        document.getElementById('ok').style.display='block';
-      })
-      .catch(function(){
-        btn.disabled = false;
-        btn.textContent = 'Bli medlem';
-        alert('Något gick fel. Försök igen.');
-      });
+  });
+
+  function done(){
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('ok').style.display = 'block';
+  }
+
+  // Visa tack när Google har svarat
+  document.getElementById('hidden_iframe').addEventListener('load', function(){
+    if (sent) done();
+  });
+
+  // Reserv: visa tack efter 6 sekunder om svaret dröjer
+  form.addEventListener('submit', function(){
+    setTimeout(function(){ if (sent) done(); }, 6000);
   });
 </script>
 </body>
