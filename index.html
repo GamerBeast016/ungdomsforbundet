@@ -123,6 +123,8 @@
           <input id="email" name="email" type="email" autocomplete="email" required>
           <label for="phone">Telefonnummer</label>
           <input id="phone" name="phone" type="tel" autocomplete="tel" required>
+          <label for="postnr">Postnummer</label>
+          <input id="postnr" name="postnr" type="text" inputmode="numeric" pattern="[0-9]{3} ?[0-9]{2}" maxlength="6" autocomplete="postal-code" placeholder="123 45" required>
           <button type="submit">Bli medlem</button>
         </form>
       </div>
@@ -137,6 +139,10 @@
   var form = document.getElementById('signup');
   var btn = form.querySelector('button');
   var sent = false;
+
+  document.getElementById('postnr').addEventListener('input', function(){
+    this.value = this.value.replace(/[^0-9 ]/g, '');
+  });
 
   form.addEventListener('submit', function(){
     sent = true;
