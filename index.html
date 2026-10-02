@@ -47,7 +47,9 @@
   }
   button:focus-visible{ outline:3px solid var(--foam); outline-offset:3px; }
   .small{ font-size:12px; color:var(--foam); opacity:.7; margin-top:18px; }
-  #ok{ display:none; }
+  #ok, #err{ display:none; }
+  #err p{ font-family:'Helvetica Neue',Arial,sans-serif; color:var(--foam); opacity:.85; font-size:15px; }
+  #retry{ background:var(--sun); color:var(--ink); border:none; padding:14px 32px; font-size:16px; font-weight:700; border-radius:999px; cursor:pointer; margin-top:8px; }
   /* Stora skärmar: håll innehållet centrerat och läsbart */
   @media (min-width:1500px){
     .brand{ padding:80px 8vw; }
@@ -123,14 +125,19 @@
           <input id="email" name="email" type="email" autocomplete="email" required>
           <label for="phone">Telefonnummer</label>
           <input id="phone" name="phone" type="tel" autocomplete="tel" required>
-          <label for="postnr">Pnummer</label>
-          <input id="postnr" name="postnr" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="XXXXXXXX-XXXX" required>
+          <label for="postnr">Postnummer</label>
+          <input id="postnr" name="postnr" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" placeholder="12345" required>
           <button type="submit">Bli medlem</button>
         </form>
       </div>
       <div id="ok">
         <h2>Välkommen till Souf!</h2>
         <p>Din anmälan är mottagen.</p>
+      </div>
+      <div id="err">
+        <h2>Det gick inte att skicka</h2>
+        <p>Anmälan avbröts, troligen för att anslutningen till internet saknas eller bröts. Kontrollera din anslutning och försök igen.</p>
+        <button type="button" id="retry">Försök igen</button>
       </div>
     </div>
   </section>
@@ -141,28 +148,56 @@
   var sent = false;
 
   document.getElementById('postnr').addEventListener('input', function(){
-    this.value = this.value.replace(/[^0-9 ]/g, '');
+    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);
   });
 
-  form.addEventListener('submit', function(){
-    sent = true;
-    btn.disabled = true;
-    btn.textContent = 'Skickar...';
-  });
+  function showError(){
+    sent = false;
+    btn.disabled = false;
+    btn.textContent = 'Bli medlem';
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('err').style.display = 'block';
+  }
 
   function done(){
     document.getElementById('form-view').style.display = 'none';
+    document.getElementById('err').style.display = 'none';
     document.getElementById('ok').style.display = 'block';
+  }
+
+  document.getElementById('retry').addEventListener('click', function(){
+    document.getElementById('err').style.display = 'none';
+    document.getElementById('form-view').style.display = 'block';
+  });
+
+  form.addEventListener('submit', function(e){
+    // Ingen anslutning alls: avbryt direkt och visa felmeddelande
+    if (!navigator.onLine) {
+      e.preventDefault();
+      showError();
+      return;
+    }
+    sent = true;
+    btn.disabled = true;
+    btn.textContent = 'Skickar...';
+
+    // Om anslutningen bryts medan vi väntar på svar
+    window.addEventListener('offline', onDropped);
+
+    // Reserv: visa tack efter 6 sekunder om inget annat hänt
+    setTimeout(function(){
+      if (sent) { window.removeEventListener('offline', onDropped); done(); }
+    }, 6000);
+  });
+
+  function onDropped(){
+    window.removeEventListener('offline', onDropped);
+    if (sent) showError();
   }
 
   // Visa tack när Google har svarat
   document.getElementById('hidden_iframe').addEventListener('load', function(){
-    if (sent) done();
-  });
-
-  // Reserv: visa tack efter 6 sekunder om svaret dröjer
-  form.addEventListener('submit', function(){
-    setTimeout(function(){ if (sent) done(); }, 6000);
+    if (sent) { window.removeEventListener('offline', onDropped); done(); }
   });
 </script>
 </body>
