@@ -147,9 +147,6 @@
   var btn = form.querySelector('button');
   var sent = false;
 
-  document.getElementById('postnr').addEventListener('input', function(){
-    this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);
-  });
 
   function showError(){
     sent = false;
