@@ -126,7 +126,7 @@
           <label for="phone">Telefonnummer</label>
           <input id="phone" name="phone" type="tel" autocomplete="tel" required>
           <label for="postnr">Postnummer</label>
-          <input id="postnr" name="postnr" type="text" inputmode="numeric" placeholder="XXXXXXXX-XXXX" required>
+          <input id="postnr" name="postnr" type="text" inputmode="numeric" autocomplete="postal-code" placeholder="XXXXXXXX-XXXX" required>
           <button type="submit">Bli medlem</button>
         </form>
       </div>
@@ -147,6 +147,9 @@
   var btn = form.querySelector('button');
   var sent = false;
 
+  document.getElementById('postnr').addEventListener('input', function(){
+    this.value = this.value.replace(/[^0-9]/g, '');
+  });
 
   function showError(){
     sent = false;
